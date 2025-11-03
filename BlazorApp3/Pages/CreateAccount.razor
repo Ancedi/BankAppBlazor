@@ -1,0 +1,123 @@
+﻿@page "/createAccount"
+@using AspireApp1.Web.Components.Interface
+@inject IAccountService AccountService
+
+<!--Create account form-->
+<PageTitle>Account Registration</PageTitle>
+<h3>Create Account</h3>
+<EditForm Model="_model" OnValidSubmit="CreateAccountAsync">
+	<DataAnnotationsValidator />
+	<ValidationSummary />
+
+	<!--Input name or "username" for account-->
+	<div className="mb-2">
+		<label>Account Name</label>
+		<InputText @bind-Value="_model.Name"/>
+	</div>
+
+	<!--dropdown to choose account type (deposit or savings)-->
+	<div className="mb-2">
+		<label>Account Type</label>
+		<InputSelect @bind-Value="_model.AccountType">
+			<option value ="">Choose Account Type</option>
+			<option value ="@AccountType.Deposit">Base Account</option>
+			<option value ="@AccountType.Savings">Savings Account</option>
+		</InputSelect>
+	</div>
+
+	<!--Input currency through text-->
+	<div className="mb-2">
+		<label>Currency</label>
+		<InputSelect @bind-Value="_model.Currency">
+			<option value ="">Choose Currency</option>
+			<option value ="@Currency.SEK">SEK</option>
+			<option value ="@Currency.EUR">EUR</option>
+			<option value ="@Currency.USD">USD</option>
+		</InputSelect>
+	</div>
+
+	<!--set account's starting wealth-->
+	<div className="mb-2">
+		<label>Initial Balance</label>
+		<InputNumber @bind-Value="_model.balance"></InputNumber>
+	</div>
+
+	<!--button to confirm account creation.-->
+	<button type="submit" class="btn btn-primary">Create Account</button>
+</EditForm>
+
+<!--displays current number of accounts and lists them all out if the criteria is met-->
+<h3>Account List</h3>
+@if (AccountList == null || AccountList.Count == 0)
+{
+	<p>No Accounts Created.</p>
+}
+else
+{
+	<!--displays the number of accounts available.-->
+	<p>Number of Accounts: @AccountList.Count</p>
+	<ul>
+		<!--displays relevant account information for every account.-->
+		@foreach (var account in AccountList)
+		{
+			<li>
+				<strong>@account.Name</strong> @account.AccountType - @account.Balance (@account.Currency)
+				<small>(Uppdaterad @account.LastUpdated.ToLocalTime())</small>
+			</li>
+		}
+	</ul>
+}
+@code {
+	private List<BankAccount> AccountList = new();
+
+	private readonly CreateAccountModel _model = new();
+	private class CreateAccountModel
+	{
+		public string? Name { get; set; }
+		public AccountType AccountType { get; set; }
+		public Currency Currency{ get; set; }
+		public decimal balance { get; set; }
+		public void clear()
+		{
+			Name = string.Empty;
+			AccountType = AccountType.Deposit;
+			Currency = Currency.SEK;
+			balance = 0;
+		}
+	}
+
+	/// <summary>
+	/// async method to create an account.
+	/// </summary>
+	private async Task CreateAccountAsync()
+	{
+		try
+		{
+			Console.WriteLine(_model.Name);
+			await AccountService.CreateAccount(
+				_model.Name,
+				_model.Currency,
+				_model.AccountType,
+				_model.balance);
+
+			AccountList = AccountService.GetAccount().ToList();
+
+			//empties input sections for aforementioned variables upon completion.
+			_model.clear();
+		}
+		catch (Exception exception)
+		{
+			Console.WriteLine($"{exception}, please try again.");
+		}
+	}
+
+	/// <summary>
+	/// async method which checks for saved accounts in the local storage.
+	/// overwrites AccountList with storedAccounts if found, retrieves accounts through account service if not (empty).
+	/// </summary>
+	protected override async Task OnInitializedAsync()
+	{
+		await AccountService.EnsureLoaded();
+		AccountList = AccountService.GetAccount();
+	}
+}

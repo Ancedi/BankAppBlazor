@@ -1,0 +1,128 @@
+﻿@page "/transfer"
+@using BlazorApp3.Domains
+@inject IAccountService AccountService
+<PageTitle>Transaction & History</PageTitle>
+<h3>Transaction</h3>
+<!--Checks and prevents transfers if there are too few accounts for a transaction.-->
+@if (_accounts.Count < 2)
+{
+    <p>2 Accounts at minimum are required to transfer currency.</p>
+}
+else
+{
+    <EditForm Model="_model" OnValidSubmit="OnSubmitTransfer">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+        <div class="mb-2">
+            <!--Specifies which account gives.-->
+            <label>From Account</label>
+            <InputSelect TValue="Guid"
+                    @bind-Value="_model.Sender"
+                    class="form-select"
+                    @onchange="HandleFormChanged">
+                <option value="@Guid.Empty">Choose Account...</option>
+                @foreach (var account in _accounts)
+                {
+                    <option value="@account.id">@account.Name - Saldo: @account.Balance - Type: @account.AccountType</option>
+                }
+            </InputSelect>
+        </div>
+        <div class="mb-2">
+            <!--Specifices which account receives.-->
+            <label>To Account</label>
+            <InputSelect TValue="Guid"
+                @bind-Value="_model.Receiver"
+                class="form-select">
+                <option value="@Guid.Empty">Choose Account</option>
+                @foreach (var account in _accounts)
+                {
+                    <option value="@account.id">@account.Name - Saldo: @account.Balance - Type: @account.AccountType</option>
+                }
+            </InputSelect>
+        </div>
+        <div class="mb-2">
+            <!--Specifies the amount given or received.-->
+            <label>Amount</label>
+            <InputNumber TValue="decimal"
+                    @bind-Value="_model.Amount"
+                    class="form-select">
+                    <option value="@_model.Amount">Choose Amount</option>
+            </InputNumber>
+        </div>
+        <button type="submit" class="btn btn-primary">Transfer</button>
+    </EditForm>
+}
+@code {
+    private readonly TransactionForm _model = new();
+    private List<BankAccount> _accounts = new();
+    private List<BankAccount> _toAccounts = new();
+    private class TransactionForm
+    {
+        public Guid Sender { get; set; }
+        public Guid Receiver { get; set; }
+        public decimal Amount { get; set; }
+        public decimal Balance{ get; set; }
+        public DateTime Time = DateTime.Now;
+    }
+
+    //Retrieves a list of created accounts to select sending and receiving-accounts.
+    protected override async Task OnInitializedAsync()
+    {
+        await AccountService.EnsureLoaded();
+        _accounts = AccountService.GetAccount();
+        _toAccounts = _accounts;
+    }
+
+    /// <summary>
+    /// Async method to perform a transaction or transfer between two accounts.
+    /// </summary>
+    /// <returns>Task.CompletedTask</returns>
+    private Task OnSubmitTransfer()
+    {
+        try
+        {
+            AccountService.Transfer(_model.Sender, _model.Receiver, _model.Amount);
+            _accounts = AccountService.GetAccount();
+            var Sender = _accounts.First(x => x.id == _model.Sender);
+            var Receiver = _accounts.First(x => x.id == _model.Receiver);
+            _model.Amount = 0;
+            StateHasChanged();
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception);
+        }
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="eventArgs"></param>
+    private void HandleFormChanged(ChangeEventArgs eventArgs)
+    {
+        if (Guid.TryParse(eventArgs.Value?.ToString(), out var id))
+        {
+            OnFormChanged(id);
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="SenderId"></param>
+    private void OnFormChanged(Guid SenderId)
+    {
+        _model.Sender = SenderId;
+        var from = _accounts.FirstOrDefault(x => x.id == SenderId);
+        if (from != null)
+        {
+            _toAccounts = _accounts.Where(_toAccounts => _toAccounts.id != SenderId).ToList();
+        }
+        else
+        {
+            _accounts = _accounts.ToList();
+        }
+        _model.Receiver = Guid.Empty;
+    }
+    }
