@@ -1,4 +1,4 @@
-﻿using AspireApp1.Web.Components.Interface;
+﻿using BlazorApp3.Interfaces;
 using Microsoft.JSInterop;
 using System.Text.Json;
 using System.Text.Json.Serialization;
