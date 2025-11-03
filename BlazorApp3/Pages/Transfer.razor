@@ -3,6 +3,7 @@
 @inject IAccountService AccountService
 <PageTitle>Transaction & History</PageTitle>
 <h3>Transaction</h3>
+
 <!--Checks and prevents transfers if there are too few accounts for a transaction.-->
 @if (_accounts.Count < 2)
 {

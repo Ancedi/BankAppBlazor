@@ -22,6 +22,18 @@ public class AccountService : IAccountService
             throw new InvalidOperationException("Service Uninitiazed");
         return _localStorage.AddItem("accounts", _accounts.OfType<BankAccount>().ToList());
     }
+    private Task DeleteAccount() // NEW
+    {
+        if (_localStorage == null)
+        {
+            throw new InvalidOperationException("Service Uninitialized");
+        }
+        if (_localStorage == null || !_accounts.Any())
+        {
+            throw new InvalidOperationException("No Accounts Available For Deletion.");
+        }
+        return _localStorage.RemoveItem("accounts", _accounts.OfType<BankAccount>().ToList());
+    }
 
     /// <summary>
     /// Method to create an account and locally store it for later retrieval.
@@ -31,11 +43,19 @@ public class AccountService : IAccountService
     /// <param name="accountType"></param>
     /// <param name="balance"></param>
     /// <returns>account</returns>
-    public async Task<BankAccount> CreateAccount(string name, Currency currency, AccountType accountType, decimal balance)
+    public async Task<BankAccount> CreateAccount(string name, string password, Currency currency, AccountType accountType, decimal balance)
     {
         var account = new BankAccount(name, accountType, currency, balance);
         _accounts.Add(account);
         await SaveAccount();
+        return account;
+    }
+
+    public async Task<BankAccount> RemoveAccount(BankAccount account) //   NEW
+    {
+        account = _accounts.FirstOrDefault();
+        _accounts.Remove(account);
+        await DeleteAccount();
         return account;
     }
 
