@@ -1,4 +1,4 @@
-using AspireApp1.Web.Components.Interface;
+using BlazorApp3.Interfaces;
 using BlazorApp3.Domains;
 using System.Threading.Tasks;
 using System.Xml;

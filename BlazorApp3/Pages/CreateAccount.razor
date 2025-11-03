@@ -1,5 +1,4 @@
 ﻿@page "/createAccount"
-@using AspireApp1.Web.Components.Interface
 @inject IAccountService AccountService
 
 <!--Create account form-->
@@ -112,6 +111,11 @@ else
 		}
 	}
 
+	/// <summary>
+	/// Async task to remove items from localstorage and current instance.
+	/// </summary>
+	/// <param name="account"></param>
+	/// <returns></returns>
 	private async Task RemoveAccountAsync(BankAccount account) //	NEW
 	{
 		try

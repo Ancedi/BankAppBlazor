@@ -7,7 +7,7 @@ namespace BlazorApp3.Domains
     {
         public string Username { get; private set; }
         public string Password { get; private set; }
-        public List<BankAccount> BankAccounts;
+        public List<BankAccount> BankAccount;
 
         public LogIn (string username, string password)
         {
@@ -16,11 +16,11 @@ namespace BlazorApp3.Domains
         }
 
         [JsonConstructor]
-        public LogIn (string username, string password, List<BankAccount> bankaccounts)
+        public LogIn (string username, string password, List<BankAccount> bankaccount)
         {
             Username = username;
             Password = password;
-            this.BankAccounts = bankaccounts;
+            this.BankAccount = bankaccount;
         }
     }
 }

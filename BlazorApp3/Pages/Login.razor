@@ -1,5 +1,18 @@
 ﻿@page "/"
-<h3></h3>
+<h3>Login & Register</h3>
 @code {
+	private List<LogIn> LogIns = new();
 
+	private readonly RegisterUserModel _model = new();
+	private class RegisterUserModel
+	{
+		public string? Username{ get; set; }
+		public string? Password{ get; set; }
+
+		public void Clear()
+		{
+			Username = string.Empty;
+			Password = string.Empty;
+		}
+	}
 }

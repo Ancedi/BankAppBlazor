@@ -1,4 +1,5 @@
-﻿namespace AspireApp1.Web.Components.Interface
+﻿using BlazorApp3.Interfaces;
+namespace BlazorApp3.Interface
 {
  //interface
     public interface IStorageService
