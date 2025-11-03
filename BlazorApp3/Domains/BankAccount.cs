@@ -13,7 +13,6 @@ public class BankAccount : IBankAccount
     public Guid id { get; private set; } = Guid.NewGuid();
 
     public string Name { get; private set; }
-    public string Password { get; private set; }
     public AccountType AccountType { get; }
 
     public Currency Currency { get; }

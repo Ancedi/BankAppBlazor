@@ -43,7 +43,7 @@ public class AccountService : IAccountService
     /// <param name="accountType"></param>
     /// <param name="balance"></param>
     /// <returns>account</returns>
-    public async Task<BankAccount> CreateAccount(string name, string password, Currency currency, AccountType accountType, decimal balance)
+    public async Task<BankAccount> CreateAccount(string name, Currency currency, AccountType accountType, decimal balance)
     {
         var account = new BankAccount(name, accountType, currency, balance);
         _accounts.Add(account);

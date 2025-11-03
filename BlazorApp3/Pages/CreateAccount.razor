@@ -15,12 +15,6 @@
 		<InputText @bind-Value="_model.Name"/>
 	</div>
 
-	<!--Input password-->
-	<div className="mb-2">
-		<label>Account Password</label>
-		<InputText @bind-Value="_model.Password"/>
-	</div>
-
 	<!--dropdown to choose account type (deposit or savings)-->
 	<div className="mb-2">
 		<label>Account Type</label>
@@ -69,7 +63,7 @@ else
 			<li>
 				<strong>@account.Name</strong> @account.AccountType - @account.Balance (@account.Currency)
 				<small>(Uppdaterad @account.LastUpdated.ToLocalTime())</small>
-				<button class="btn btn-sm btn-danger" @onclick="() => RemoveAccountAsync(account)">Delete</button>		<!--NEW-->
+				<button class="btn btn-sm btn-danger" @onclick="() => RemoveAccountAsync(account)">Delete</button>		<!--Delete Account Button-->
 			</li>
 		}
 	</ul>
@@ -81,7 +75,6 @@ else
 	private class CreateAccountModel
 	{
 		public string? Name { get; set; }
-		public string? Password{ get; set; }
 		public AccountType AccountType { get; set; }
 		public Currency Currency{ get; set; }
 		public decimal balance { get; set; }
@@ -104,7 +97,6 @@ else
 			Console.WriteLine(_model.Name);
 			await AccountService.CreateAccount(
 				_model.Name,
-				_model.Password,
 				_model.Currency,
 				_model.AccountType,
 				_model.balance);

@@ -10,7 +10,6 @@ public interface IBankAccount
 {
     Guid id {get;}
     string Name { get; }
-    string Password { get; }
     AccountType AccountType { get; }
     Currency Currency { get; }
     decimal Balance { get; }
