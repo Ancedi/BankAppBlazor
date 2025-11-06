@@ -1,18 +1,91 @@
 ﻿@page "/"
-<h3>Login & Register</h3>
+@inject IAccountService AccountService
+<PageTitle>Login & Register</PageTitle>
+<h3>Login</h3>
+<h3>Register</h3>
+<EditForm Model="_model" OnValidSubmit="RegisterLoginAsync">
+	<DataAnnotationsValidator/>
+	<ValidationSummary/>
+	<div className="mb-2">
+		<label>Username</label>
+		<InputText @bind-Value="_model.Username"/>
+	</div>
+	<div className="mb-2">
+		<label>Password</label>
+		<InputText @bind-Value="_model.Password"/>
+	</div>
+	<button type="submit" class="btn btn-primary">Register</button>
+</EditForm>
+<h3>Login List</h3>
+@if (_logins == null || _logins.Count() == 0)
+{
+	<p>No Logins Exist Yet.</p>
+}
+else
+{
+	foreach (var login in _logins)
+	{
+		<p>Username: @login.Username</p>
+		<p>Passwprd: @login.Password</p>
+		<button class="btn btn-sm btn-danger" @onclick="() => RemoveLoginAsync(login)">Delete</button>
+	}
+}
 @code {
-	private List<LogIn> LogIns = new();
+	private List<Domains.Login> _logins = new();
 
 	private readonly RegisterUserModel _model = new();
 	private class RegisterUserModel
 	{
-		public string? Username{ get; set; }
-		public string? Password{ get; set; }
+		public string? Username { get; set; }
+		public string? Password { get; set; }
 
-		public void Clear()
+		public void clear()
 		{
 			Username = string.Empty;
 			Password = string.Empty;
 		}
+	}
+
+	private async Task RegisterLoginAsync()
+	{
+		try
+		{
+			if (string.IsNullOrWhiteSpace(_model.Username) || string.IsNullOrWhiteSpace(_model.Password))
+			{
+				Console.WriteLine("Username and password are required.");
+				return;
+			}
+			if (_logins.Any(l => l.Username.Equals(_model.Username, StringComparison.OrdinalIgnoreCase)))
+			{
+				Console.WriteLine("User Already Exist");
+				return;
+			}
+			await AccountService.RegisterLogin(_model.Username, _model.Password);
+
+			_logins = AccountService.GetLogin().ToList();
+
+			Console.WriteLine($"User {_model.Username} registered successfully.");
+			_model.clear();
+		}
+		catch (Exception exception)
+		{
+			Console.WriteLine($"An error occured registering user; {exception}");
+		}
+	}
+	private async Task RemoveLoginAsync(Domains.Login login)
+	{
+		try
+		{
+			await AccountService.RemoveLogin(login);
+		}
+		catch (Exception exception)
+		{
+			Console.WriteLine($"{exception}, please try again.");
+		}
+	}
+	protected override async Task OnInitializedAsync()
+	{
+		await AccountService.LoadLogins();
+		_logins = AccountService.GetLogin();
 	}
 }

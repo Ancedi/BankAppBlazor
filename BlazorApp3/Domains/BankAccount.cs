@@ -1,5 +1,5 @@
 
-using AspireApp1.Web.Components.Interface;
+using BankApp.Interfaces;
 using BankApp.Services;
 using BlazorApp3.Domains;
 using Microsoft.JSInterop.Infrastructure;

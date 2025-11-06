@@ -1,5 +1,5 @@
 ﻿using BlazorApp3.Interfaces;
-namespace BlazorApp3.Interface
+namespace BankApp.Interfaces
 {
  //interface
     public interface IStorageService

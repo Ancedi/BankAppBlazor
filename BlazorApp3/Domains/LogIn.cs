@@ -3,20 +3,20 @@ using System.Text.Json.Serialization;
 
 namespace BlazorApp3.Domains
 {
-    public class LogIn : ILogIn
+    public class Login : ILogin
     {
         public string Username { get; private set; }
         public string Password { get; private set; }
-        public List<BankAccount> BankAccount;
+        public List<BankAccount> BankAccount { get; set; } = new();
 
-        public LogIn (string username, string password)
+        public Login (string username, string password)
         {
             Username = username;
             Password = password;
         }
 
         [JsonConstructor]
-        public LogIn (string username, string password, List<BankAccount> bankaccount)
+        public Login (string username, string password, List<BankAccount> bankaccount)
         {
             Username = username;
             Password = password;

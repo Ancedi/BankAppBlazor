@@ -6,9 +6,11 @@ namespace BankApp.Services;
 public class AccountService : IAccountService
 {
     private bool isLoaded = false;
+    private List<Login> _logins = new();
     private List<BankAccount> _accounts = new();
     private readonly IStorageService _localStorage;
 
+    public List<Login> GetLogin() => _logins;
     public List<BankAccount> GetAccount() => _accounts; //backend list of created bank accounts.
 
     public AccountService(IStorageService localStorage)
@@ -16,23 +18,60 @@ public class AccountService : IAccountService
         _localStorage = localStorage;
     }
 
+
+    /// <summary>
+    /// Store account item in localstorage to "accounts", provides exception.
+    /// </summary>
+    /// <returns>_localStorage.AddItem()</returns>
+    /// <exception cref="InvalidOperationException"></exception>
     private Task SaveAccount()
     {
         if (_localStorage == null)
             throw new InvalidOperationException("Service Uninitiazed");
         return _localStorage.AddItem("accounts", _accounts.OfType<BankAccount>().ToList());
     }
-    private Task DeleteAccount() // NEW
+
+    /// <summary>
+    /// Store login item in localstorage to "logins"
+    /// </summary>
+    /// <returns>_localstorage.AddItem()</returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    private Task SaveLogin()
     {
         if (_localStorage == null)
-        {
             throw new InvalidOperationException("Service Uninitialized");
-        }
+        return _localStorage.AddItem("logins", _logins.OfType<Login>().ToList());
+    }
+
+    /// <summary>
+    /// Removes account items from localstorage.
+    /// </summary>
+    /// <returns>_localStorage.AddItem()</returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    private Task DeleteAccount()
+    {
         if (_localStorage == null || !_accounts.Any())
         {
             throw new InvalidOperationException("No Accounts Available For Deletion.");
         }
         return _localStorage.RemoveItem("accounts", _accounts.OfType<BankAccount>().ToList());
+    }
+
+    private Task DeleteLogin()
+    {
+        if (_localStorage == null || _accounts.Any())
+        {
+            throw new InvalidOperationException("No Logins Available For Deletion");
+        }
+        return _localStorage.RemoveItem("logins", _logins.OfType<Login>().ToList());
+    }
+
+    public async Task<Login> RegisterLogin(string username, string password)
+    {
+        var login = new Login(username, password);
+        _logins.Add(login);
+        await SaveLogin();
+        return login;
     }
 
     /// <summary>
@@ -51,12 +90,25 @@ public class AccountService : IAccountService
         return account;
     }
 
-    public async Task<BankAccount> RemoveAccount(BankAccount account) //   NEW
+    /// <summary>
+    /// method to remove an account from localstorage.
+    /// </summary>
+    /// <param name="account"></param>
+    /// <returns></returns>
+    public async Task<BankAccount> RemoveAccount(BankAccount account)
     {
         account = _accounts.FirstOrDefault();
         _accounts.Remove(account);
         await DeleteAccount();
         return account;
+    }
+
+    public async Task<Login> RemoveLogin(Login login)
+    {
+        login = _logins.FirstOrDefault();
+        _logins.Remove(login);
+        await DeleteLogin();
+        return login;
     }
 
     /// <summary>
@@ -67,6 +119,14 @@ public class AccountService : IAccountService
         if (isLoaded == false)
         {
             _accounts = await _localStorage.GetItem<List<BankAccount>> ("accounts") ?? new List<BankAccount>();
+            isLoaded = true;
+        }
+    }
+    public async Task LoadLogins()
+    {
+        if (isLoaded == false)
+        {
+            _logins = await _localStorage.GetItem<List<Login>> ("logins") ?? new List<Login>();
             isLoaded = true;
         }
     }

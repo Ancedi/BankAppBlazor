@@ -1,4 +1,4 @@
-using AspireApp1.Web.Components.Interface;
+using BankApp.Interfaces;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 

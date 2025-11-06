@@ -1,8 +1,9 @@
 ﻿namespace BlazorApp3.Interfaces
 {
-    public interface ILogIn
+    public interface ILogin
     {
         string Username { get; }
         string Password { get; }
+        List<BankAccount> BankAccount { get; }
     }
 }
