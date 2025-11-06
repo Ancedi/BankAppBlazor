@@ -1,6 +1,31 @@
 ﻿@page "/"
 <h3>Home</h3>
-
+@if (_model.InputUsername != _login.Username)
+{
+	
+}
 @code {
+	private Login _login = new Login();
 
+	private readonly BankLogin _model = new();
+	private class BankLogin
+	{
+		public string? InputUsername { get; set; }
+		public string? InputPassword{ get; set; }
+		private void Clear()
+		{
+			InputUsername = string.Empty;
+			InputPassword = string.Empty;
+		}
+	}
+	private bool isLoggedIn = false;
+	private string LoginAlert = "";
+	private void HandleLogin()
+	{
+		if (_model.InputUsername == _login.Username)
+		{
+			isLoggedIn = true;
+			LoginAlert = "Welcome Admin_User.";
+		}
+	}
 }
