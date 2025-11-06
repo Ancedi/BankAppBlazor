@@ -6,45 +6,48 @@
 {
 	<strong style="color:red">Login Required For Access, Please Return After!</strong>
 }
-<!--Checks if the amount of accounts meets the criteria-->
-@if (_accounts.Count < 2)
-{
-	<p>No Accounts Exist.</p>
-}
 else
 {
-	<!--dropdown to select which account to access logged transaction history.-->
-	<div class ="mb-2">
-		<InputSelect TValue="Guid"
-			class="form-select"
-			Id="accountSelect"
-			@bind-Value="selectAccountId">
+	<!--Checks if the amount of accounts meets the criteria-->
+	@if (_accounts.Count < 2)
+	{
+		<p>No Accounts Exist.</p>
+	}
+	else
+	{
+		<!--dropdown to select which account to access logged transaction history.-->
+		<div class ="mb-2">
+			<InputSelect TValue="Guid"
+				class="form-select"
+				Id="accountSelect"
+				@bind-Value="selectAccountId">
 
-			<!--displays account relevant information for every account.-->
-			@foreach (var account in _accounts)
-			{
-				<option value="@account.id">@account.Name - Saldo: @account.Balance</option>
-			}
-		</InputSelect>
-	</div>
+				<!--displays account relevant information for every account.-->
+				@foreach (var account in _accounts)
+				{
+					<option value="@account.id">@account.Name - Saldo: @account.Balance</option>
+				}
+			</InputSelect>
+		</div>
 
-	//Display filter for amount transfered between accounts.
-	<div class ="mb-2">
-		<label>Filter By Amount</label>
-		<InputNumber @bind-Value="_inputAmountFilter" TValue="decimal?"/>
-	</div>
+		//Display filter for amount transfered between accounts.
+		<div class ="mb-2">
+			<label>Filter By Amount</label>
+			<InputNumber @bind-Value="_inputAmountFilter" TValue="decimal?"/>
+		</div>
 
-	<!--Buttons with which to select how to sort/order the user history of transactions.-->
-	<div class="mb-2">
+		<!--Buttons with which to select how to sort/order the user history of transactions.-->
+		<div class="mb-2">
 
-		<!--sort by date-->
-		<button class="btn btn-sm" @onclick="() => setSort(SortKey.Date)">•</button>
-			Sort By Date @(currentKey == SortKey.Date ? (descending ? "↓" : "↑") : "")
+			<!--sort by date-->
+			<button class="btn btn-sm" @onclick="() => setSort(SortKey.Date)">•</button>
+				Sort By Date @(currentKey == SortKey.Date ? (descending ? "↓" : "↑") : "")
 
-		<!--sort by amount-->
-		<button class="btn btn-sm" @onclick="() => setSort(SortKey.Amount)">•</button>
-			Sort By Amount @(currentKey == SortKey.Amount ? (descending ? "↓" : "↑") : "")
-	</div>
+			<!--sort by amount-->
+			<button class="btn btn-sm" @onclick="() => setSort(SortKey.Amount)">•</button>
+				Sort By Amount @(currentKey == SortKey.Amount ? (descending ? "↓" : "↑") : "")
+		</div>
+	}
 
 	<!--Checks if any transactions has occured at all.-->
 	@if (!_selectAccount.Transaction.Any())

@@ -6,6 +6,6 @@ namespace BlazorApp3.Domains
     {
         public string Username { get; } = "Admin";
         public string Password { get; } = "1234";
-        public List<BankAccount> BankAccount { get; set; } = new();
+        public bool isLoggedIn { get; } = false;
     }
 }
