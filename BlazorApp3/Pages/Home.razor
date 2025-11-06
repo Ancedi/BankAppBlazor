@@ -1,6 +1,12 @@
 ﻿@page "/"
 <h3>Home</h3>
-@if (_model.InputUsername != _login.Username)
+@if (isLoggedIn == false)
+{
+	<EditForm Model="_model" OnValidSubmit="HandleLogin">
+		<DataAnnotationsValidator/>
+		<ValidationSummary/>
+	</EditForm>
+}
 {
 	
 }
