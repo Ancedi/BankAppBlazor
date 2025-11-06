@@ -18,14 +18,33 @@
 			InputPassword = string.Empty;
 		}
 	}
+
+	private async Task BankLoginAsync()
+	{
+		try
+		{
+			Console.WriteLine(_model);
+		}
+		catch (Exception exception)
+		{
+			Console.WriteLine(exception);
+		}
+	}
+
 	private bool isLoggedIn = false;
 	private string LoginAlert = "";
 	private void HandleLogin()
 	{
-		if (_model.InputUsername == _login.Username)
+		if (_model.InputUsername == _login.Username && _model.InputPassword == _login.Password)
 		{
 			isLoggedIn = true;
 			LoginAlert = "Welcome Admin_User.";
 		}
+		else
+		{
+			LoginAlert = "Invalid Username or Password. Please Try Again.";
+		}
+
+		_model.Clear();
 	}
 }
