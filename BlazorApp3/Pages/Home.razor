@@ -1,6 +1,9 @@
 ﻿@page "/"
+@inject BlazorApp3.Services.LoginCheck Login
 <h3>Home</h3>
-@if (isLoggedIn == false)
+
+<!--Bool checks whether user is logged in before presenting frontend editform to enter username and password-->
+@if (!Login.isLoggedIn)
 {
 	<EditForm Model="_model" OnValidSubmit="HandleLogin">
 		<DataAnnotationsValidator/>
@@ -15,14 +18,19 @@
 		</div>
 		<button type="submit">Log In</button>
 	</EditForm>
+
+	<!--Warns user of giving invalid input-->
 	@if (string.IsNullOrEmpty(LoginAlert))
 	{
 		<p>@LoginAlert</p>
 	}
 }
+
+<!--If user input correct information, will be informed and offered the logout option.-->
 else
 {
 	<h4>@LoginAlert</h4>
+	<button @onclick="Login.LogOut">Log Out</button> <!--Only One Login Available, Preset.-->
 }
 @code {
 	private Login _login = new Login();
@@ -39,19 +47,24 @@ else
 		}
 	}
 
-	private bool isLoggedIn = false;
+	//string message for failed or successful login attempt.
 	private string LoginAlert = "";
+
+	/// <summary>
+	/// void method with 2 different responses prepared for user's login attempt failing or succeeding.'
+	/// </summary>
 	private void HandleLogin()
 	{
 		if (_model.InputUsername == _login.Username && _model.InputPassword == _login.Password)
 		{
-			isLoggedIn = true;
-			LoginAlert = "Welcome Administrator.";
+			Login.LogIn();
+			LoginAlert = $"Welcome {_login.Username}";
 		}
 		else
 		{
+			Login.LogOut();
 			LoginAlert = "Invalid Username or Password. Please Try Again.";
-			_model.Clear();
+			_model.Clear(); //Claers input for another attmempt. Not set after else because of concern for wiping username/password data for current instance.
 		}
 	}
 }

@@ -3,6 +3,7 @@
 @inject IAccountService AccountService
 @inject BlazorApp3.Services.LoginCheck Login
 <h3>TransactionHistory</h3>
+<!--Bool which checks if user is logged in or not-->
 @if (!Login.isLoggedIn)
 {
 	<strong style="color:red">Login Required For Access, Please Return After!</strong>
@@ -50,7 +51,7 @@ else
 		</div>
 	}
 	<!--Checks if any transactions has occured at all.-->
-	@if (!_selectAccount.Transaction.Any())
+	@if (_selectAccount?.Transaction == null)
 	{
 		<p>No Transactions Between Accounts Has Occured.</p>
 	}

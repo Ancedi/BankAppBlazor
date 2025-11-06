@@ -5,7 +5,7 @@ using System.Xml;
 namespace BankApp.Services;
 public class AccountService : IAccountService
 {
-    private bool isLoaded = false;
+    private bool isLoaded = false; //bool automatically set to false, expected to be true after data retrieval.
     private List<BankAccount> _accounts = new();
     private readonly IStorageService _localStorage;
 

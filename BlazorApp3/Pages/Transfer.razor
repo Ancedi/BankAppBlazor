@@ -4,6 +4,8 @@
 @inject BlazorApp3.Services.LoginCheck Login
 <PageTitle>Transaction & History</PageTitle>
 <h3>Transaction</h3>
+
+<!--Checks if user is logged in. Warns if not.-->
 @if (!Login.isLoggedIn)
 {
     <strong style="color:red">Login Required For Access, Please Return After!</strong>

@@ -2,14 +2,17 @@
 @using AspireApp1.Web.Components.Interface
 @inject IAccountService AccountService
 @inject BlazorApp3.Services.LoginCheck Login
-<!--Create account form-->
 <PageTitle>Account Registration</PageTitle>
+
+<!--Checks if user is logged in. Warns if not.-->
 @if (!Login.isLoggedIn)
 {
 	<strong style="color:red">Login Required For Access, Please Return After!</strong>
 }
 else
 {
+	
+	<!--Create account form-->
 	<h3>Create Account</h3>
 	<EditForm Model="_model" OnValidSubmit="CreateAccountAsync">
 		<DataAnnotationsValidator />
