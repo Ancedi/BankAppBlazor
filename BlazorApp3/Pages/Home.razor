@@ -13,10 +13,16 @@
 			<label>Password</label>
 			<InputText @bind-Value="_model.InputPassword"/>
 		</div>
+		<button type="submit">Log In</button>
 	</EditForm>
+	@if (string.IsNullOrEmpty(LoginAlert))
+	{
+		<p>@LoginAlert</p>
+	}
 }
+else
 {
-	
+	<h4>@LoginAlert</h4>
 }
 @code {
 	private Login _login = new Login();
