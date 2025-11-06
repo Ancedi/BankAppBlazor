@@ -3,55 +3,63 @@
 @inject IAccountService AccountService
 <PageTitle>Transaction & History</PageTitle>
 <h3>Transaction</h3>
-<!--Checks and prevents transfers if there are too few accounts for a transaction.-->
-@if (_accounts.Count < 2)
+@if (isLoggedIn == false)
 {
-    <p>2 Accounts at minimum are required to transfer currency.</p>
+    <strong style="color:red">Login Required For Access, Please Return After!</strong>
 }
 else
 {
-    <EditForm Model="_model" OnValidSubmit="OnSubmitTransfer">
-        <DataAnnotationsValidator/>
-        <ValidationSummary/>
-        <div class="mb-2">
-            <!--Specifies which account gives.-->
-            <label>From Account</label>
-            <InputSelect TValue="Guid"
-                    @bind-Value="_model.Sender"
-                    class="form-select"
-                    @onchange="HandleFormChanged">
-                <option value="@Guid.Empty">Choose Account...</option>
-                @foreach (var account in _accounts)
-                {
-                    <option value="@account.id">@account.Name - Saldo: @account.Balance - Type: @account.AccountType</option>
-                }
-            </InputSelect>
-        </div>
-        <div class="mb-2">
-            <!--Specifices which account receives.-->
-            <label>To Account</label>
-            <InputSelect TValue="Guid"
-                @bind-Value="_model.Receiver"
-                class="form-select">
-                <option value="@Guid.Empty">Choose Account</option>
-                @foreach (var account in _accounts)
-                {
-                    <option value="@account.id">@account.Name - Saldo: @account.Balance - Type: @account.AccountType</option>
-                }
-            </InputSelect>
-        </div>
-        <div class="mb-2">
-            <!--Specifies the amount given or received.-->
-            <label>Amount</label>
-            <InputNumber TValue="decimal"
-                    @bind-Value="_model.Amount"
+    <!--Checks and prevents transfers if there are too few accounts for a transaction.-->
+    @if (_accounts.Count < 2)
+    {
+        <p>2 Accounts at minimum are required to transfer currency.</p>
+    }
+    else
+    {
+        <EditForm Model="_model" OnValidSubmit="OnSubmitTransfer">
+            <DataAnnotationsValidator/>
+            <ValidationSummary/>
+            <div class="mb-2">
+                <!--Specifies which account gives.-->
+                <label>From Account</label>
+                <InputSelect TValue="Guid"
+                        @bind-Value="_model.Sender"
+                        class="form-select"
+                        @onchange="HandleFormChanged">
+                    <option value="@Guid.Empty">Choose Account...</option>
+                    @foreach (var account in _accounts)
+                    {
+                        <option value="@account.id">@account.Name - Saldo: @account.Balance - Type: @account.AccountType</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="mb-2">
+                <!--Specifices which account receives.-->
+                <label>To Account</label>
+                <InputSelect TValue="Guid"
+                    @bind-Value="_model.Receiver"
                     class="form-select">
-                    <option value="@_model.Amount">Choose Amount</option>
-            </InputNumber>
-        </div>
-        <button type="submit" class="btn btn-primary">Transfer</button>
-    </EditForm>
+                    <option value="@Guid.Empty">Choose Account</option>
+                    @foreach (var account in _accounts)
+                    {
+                        <option value="@account.id">@account.Name - Saldo: @account.Balance - Type: @account.AccountType</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="mb-2">
+                <!--Specifies the amount given or received.-->
+                <label>Amount</label>
+                <InputNumber TValue="decimal"
+                        @bind-Value="_model.Amount"
+                        class="form-select">
+                        <option value="@_model.Amount">Choose Amount</option>
+                </InputNumber>
+            </div>
+            <button type="submit" class="btn btn-primary">Transfer</button>
+        </EditForm>
+    }
 }
+
 @code {
     private readonly TransactionForm _model = new();
     private List<BankAccount> _accounts = new();

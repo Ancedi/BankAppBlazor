@@ -2,6 +2,10 @@
 @using BlazorApp3.Domains
 @inject IAccountService AccountService
 <h3>TransactionHistory</h3>
+@if (isLoggedIn == false)
+{
+	<strong style="color:red">Login Required For Access, Please Return After!</strong>
+}
 <!--Checks if the amount of accounts meets the criteria-->
 @if (_accounts.Count < 2)
 {

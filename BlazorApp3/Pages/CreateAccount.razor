@@ -1,9 +1,12 @@
 ﻿@page "/createAccount"
 @using AspireApp1.Web.Components.Interface
 @inject IAccountService AccountService
-
 <!--Create account form-->
 <PageTitle>Account Registration</PageTitle>
+@if (isLoggedIn == false)
+{
+	<strong style="color:red">Login Required For Access, Please Return After!</strong>
+}
 <h3>Create Account</h3>
 <EditForm Model="_model" OnValidSubmit="CreateAccountAsync">
 	<DataAnnotationsValidator />
