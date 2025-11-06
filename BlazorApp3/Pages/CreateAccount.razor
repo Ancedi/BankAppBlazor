@@ -1,74 +1,78 @@
 ﻿@page "/createAccount"
 @using AspireApp1.Web.Components.Interface
 @inject IAccountService AccountService
+@inject BlazorApp3.Services.LoginCheck Login
 <!--Create account form-->
 <PageTitle>Account Registration</PageTitle>
-@if (isLoggedIn == false)
+@if (!Login.isLoggedIn)
 {
 	<strong style="color:red">Login Required For Access, Please Return After!</strong>
 }
-<h3>Create Account</h3>
-<EditForm Model="_model" OnValidSubmit="CreateAccountAsync">
-	<DataAnnotationsValidator />
-	<ValidationSummary />
-
-	<!--Input name or "username" for account-->
-	<div className="mb-2">
-		<label>Account Name</label>
-		<InputText @bind-Value="_model.Name"/>
-	</div>
-
-	<!--dropdown to choose account type (deposit or savings)-->
-	<div className="mb-2">
-		<label>Account Type</label>
-		<InputSelect @bind-Value="_model.AccountType">
-			<option value ="">Choose Account Type</option>
-			<option value ="@AccountType.Deposit">Base Account</option>
-			<option value ="@AccountType.Savings">Savings Account</option>
-		</InputSelect>
-	</div>
-
-	<!--Input currency through text-->
-	<div className="mb-2">
-		<label>Currency</label>
-		<InputSelect @bind-Value="_model.Currency">
-			<option value ="">Choose Currency</option>
-			<option value ="@Currency.SEK">SEK</option>
-			<option value ="@Currency.EUR">EUR</option>
-			<option value ="@Currency.USD">USD</option>
-		</InputSelect>
-	</div>
-
-	<!--set account's starting wealth-->
-	<div className="mb-2">
-		<label>Initial Balance</label>
-		<InputNumber @bind-Value="_model.balance"></InputNumber>
-	</div>
-
-	<!--button to confirm account creation.-->
-	<button type="submit" class="btn btn-primary">Create Account</button>
-</EditForm>
-
-<!--displays current number of accounts and lists them all out if the criteria is met-->
-<h3>Account List</h3>
-@if (AccountList == null || AccountList.Count == 0)
-{
-	<p>No Accounts Created.</p>
-}
 else
 {
-	<!--displays the number of accounts available.-->
-	<p>Number of Accounts: @AccountList.Count</p>
-	<ul>
-		<!--displays relevant account information for every account.-->
-		@foreach (var account in AccountList)
-		{
-			<li>
-				<strong>@account.Name</strong> @account.AccountType - @account.Balance (@account.Currency)
-				<small>(Uppdaterad @account.LastUpdated.ToLocalTime())</small>
-			</li>
-		}
-	</ul>
+	<h3>Create Account</h3>
+	<EditForm Model="_model" OnValidSubmit="CreateAccountAsync">
+		<DataAnnotationsValidator />
+		<ValidationSummary />
+
+		<!--Input name or "username" for account-->
+		<div className="mb-2">
+			<label>Account Name</label>
+			<InputText @bind-Value="_model.Name"/>
+		</div>
+
+		<!--dropdown to choose account type (deposit or savings)-->
+		<div className="mb-2">
+			<label>Account Type</label>
+			<InputSelect @bind-Value="_model.AccountType">
+				<option value ="">Choose Account Type</option>
+				<option value ="@AccountType.Deposit">Base Account</option>
+				<option value ="@AccountType.Savings">Savings Account</option>
+			</InputSelect>
+		</div>
+
+		<!--Input currency through text-->
+		<div className="mb-2">
+			<label>Currency</label>
+			<InputSelect @bind-Value="_model.Currency">
+				<option value ="">Choose Currency</option>
+				<option value ="@Currency.SEK">SEK</option>
+				<option value ="@Currency.EUR">EUR</option>
+				<option value ="@Currency.USD">USD</option>
+			</InputSelect>
+		</div>
+
+		<!--set account's starting wealth-->
+		<div className="mb-2">
+			<label>Initial Balance</label>
+			<InputNumber @bind-Value="_model.balance"></InputNumber>
+		</div>
+
+		<!--button to confirm account creation.-->
+		<button type="submit" class="btn btn-primary">Create Account</button>
+	</EditForm>
+
+	<!--displays current number of accounts and lists them all out if the criteria is met-->
+	<h3>Account List</h3>
+	@if (AccountList == null || AccountList.Count == 0)
+	{
+		<p>No Accounts Created.</p>
+	}
+	else
+	{
+		<!--displays the number of accounts available.-->
+		<p>Number of Accounts: @AccountList.Count</p>
+		<ul>
+			<!--displays relevant account information for every account.-->
+			@foreach (var account in AccountList)
+			{
+				<li>
+					<strong>@account.Name</strong> @account.AccountType - @account.Balance (@account.Currency)
+					<small>(Uppdaterad @account.LastUpdated.ToLocalTime())</small>
+				</li>
+			}
+		</ul>
+	}	
 }
 @code {
 	private List<BankAccount> AccountList = new();

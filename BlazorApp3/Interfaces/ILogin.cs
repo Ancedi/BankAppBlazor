@@ -4,6 +4,5 @@
     {
         string Username { get; }
         string Password { get; }
-        bool isLoggedIn { get; }
     }
 }

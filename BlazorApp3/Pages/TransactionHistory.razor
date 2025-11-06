@@ -1,8 +1,9 @@
 ﻿@page "/transactionHistory"
 @using BlazorApp3.Domains
 @inject IAccountService AccountService
+@inject BlazorApp3.Services.LoginCheck Login
 <h3>TransactionHistory</h3>
-@if (isLoggedIn == false)
+@if (!Login.isLoggedIn)
 {
 	<strong style="color:red">Login Required For Access, Please Return After!</strong>
 }
@@ -48,7 +49,6 @@ else
 				Sort By Amount @(currentKey == SortKey.Amount ? (descending ? "↓" : "↑") : "")
 		</div>
 	}
-
 	<!--Checks if any transactions has occured at all.-->
 	@if (!_selectAccount.Transaction.Any())
 	{
