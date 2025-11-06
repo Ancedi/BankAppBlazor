@@ -12,22 +12,10 @@
 	{
 		public string? InputUsername { get; set; }
 		public string? InputPassword{ get; set; }
-		private void Clear()
+		public void Clear()
 		{
 			InputUsername = string.Empty;
 			InputPassword = string.Empty;
-		}
-	}
-
-	private async Task BankLoginAsync()
-	{
-		try
-		{
-			Console.WriteLine(_model);
-		}
-		catch (Exception exception)
-		{
-			Console.WriteLine(exception);
 		}
 	}
 
@@ -43,8 +31,7 @@
 		else
 		{
 			LoginAlert = "Invalid Username or Password. Please Try Again.";
+			_model.Clear();
 		}
-
-		_model.Clear();
 	}
 }
