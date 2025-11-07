@@ -47,6 +47,14 @@ public class AccountService : IAccountService
         return account;
     }
 
+    public async Task<BankAccount> EraseAccount(BankAccount account)
+    {
+        account = _accounts.FirstOrDefault();
+        _accounts.Remove(account);
+        await DeleteAccount();
+        return account;
+    }
+
     /// <summary>
     /// Method which ensures list of accounts is loaded up if any has been saved.
     /// </summary>
@@ -75,13 +83,13 @@ public class AccountService : IAccountService
 
     private void Notify() => ApplyRate?.Invoke();
 
-    public void AppliedRate(BankAccount bankAccount)
+    public void AppliedRate(BankAccount account)
     {
-        var lastUpdatedThreshold = bankAccount.LastUpdated.AddDays(1);
+        var lastUpdatedThreshold = account.LastUpdated.AddMinutes(1);
         if (lastUpdatedThreshold <= DateTime.Now)
         {
             Notify();
-            bankAccount.ApplyInterestRate();
+            account.ApplyInterestRate();
         }  
     }
 }

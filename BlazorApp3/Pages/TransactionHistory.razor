@@ -2,7 +2,6 @@
 @using BankAppBlazor.Domains
 @inject IAccountService AccountService
 @inject BlazorApp3.Services.LoginCheck Login
-<h3>TransactionHistory</h3>
 <!--Bool which checks if user is logged in or not-->
 @if (!Login.isLoggedIn)
 {
@@ -10,6 +9,8 @@
 }
 else
 {
+	<h3>Transaction History</h3>
+	
 	<!--Checks if the amount of accounts meets the criteria-->
 	@if (_accounts.Count < 2)
 	{
@@ -150,13 +151,7 @@ else
 		{
 			_selectAccountId = _accounts[0].id;
 			_selectAccount = _accounts[0];
-			AccountService.ApplyRate += StateChanged;
 		}
-	}
-
-	public async void StateChanged()
-	{
-		await InvokeAsync(StateHasChanged);
 	}
 
 	/// <summary>

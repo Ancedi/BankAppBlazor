@@ -14,7 +14,7 @@ public class BankAccount : IBankAccount
     public AccountType AccountType { get; }
 
     public Currency Currency { get; }
-    public decimal Rate { get; } = 1.01m;
+    public decimal Rate { get; } = 0.01m;
     public decimal Balance { get; private set; }
     public DateTime LastUpdated { get; private set; }
     public List<Transaction> Transaction { get; set; } = new();
@@ -55,7 +55,7 @@ public class BankAccount : IBankAccount
     //applies interest rate to current balance when called.
     public void ApplyInterestRate()
     {
-        Balance *= Rate;
+        Balance *= (1+Rate);
     }
 
     //Specifies giver and recipient of a user determined amount.

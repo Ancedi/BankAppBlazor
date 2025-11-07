@@ -70,8 +70,10 @@ else
 			@foreach (var account in AccountList)
 			{
 				<li>
-					<strong>@account.Name</strong> @account.AccountType - @account.Balance (@account.Currency) - @account.Rate
+					<strong>@account.Name</strong> @account.AccountType - @account.Balance (@account.Currency) - Interest Rate: +@account.Rate%
 					<small>(Uppdaterad @account.LastUpdated.ToLocalTime())</small>
+					<button class="btn btn-secondary" @onclick="() => AppliedRateAsync(account)">Check Interest</button>
+					<button class="btn btn-danger" @onclick="() => EraseAccountAsync(account)">Delete Account</button>
 				</li>
 			}
 		</ul>
@@ -128,6 +130,18 @@ else
 		}
 	}
 
+	private async Task EraseAccountAsync(BankAccount account)
+	{
+		try
+		{
+			await AccountService.EraseAccount(account);
+		}
+		catch (Exception exception)
+		{
+			Console.WriteLine(exception);
+		}
+	}
+
 	/// <summary>
 	/// async method which checks for saved accounts in the local storage.
 	/// overwrites AccountList with storedAccounts if found, retrieves accounts through account service if not (empty).
@@ -142,6 +156,19 @@ else
 	public async void StateChanged()
 	{
 		await InvokeAsync(StateHasChanged);
+	}
+
+	private Task AppliedRateAsync(BankAccount account)
+	{
+		try
+		{
+			AccountService.AppliedRate(account);
+		}
+		catch (Exception exception)
+		{
+			Console.WriteLine(exception);
+		}
+		return Task.CompletedTask;
 	}
 
 
