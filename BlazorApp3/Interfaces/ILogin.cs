@@ -1,4 +1,4 @@
-﻿namespace BlazorApp3.Interfaces
+﻿namespace BankAppBlazor.Interfaces
 {
     public interface ILogin //Basic interface for Login.
     {

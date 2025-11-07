@@ -1,12 +1,12 @@
 ﻿@page "/transfer"
-@using BlazorApp3.Domains
+@using BankAppBlazor.Domains
 @inject IAccountService AccountService
-@inject BlazorApp3.Services.LoginCheck Login
+@inject BlazorApp3.Services.LoginCheck loginCheck
 <PageTitle>Transaction & History</PageTitle>
 <h3>Transaction</h3>
 
 <!--Checks if user is logged in. Warns if not.-->
-@if (!Login.isLoggedIn)
+@if (!loginCheck.isLoggedIn)
 {
     <strong style="color:red">Login Required For Access, Please Return After!</strong>
 }

@@ -1,13 +1,11 @@
 
-using AspireApp1.Web.Components.Interface;
-using BankApp.Services;
-using BlazorApp3.Domains;
+using BankAppBlazor.Services;
 using Microsoft.JSInterop.Infrastructure;
 using System.Text.Json.Serialization;
 using System.Transactions;
-using Transaction = BlazorApp3.Domains.Transaction;
+using BankAppBlazor.Domains;
 
-namespace BankApp.Domains;
+namespace BankAppBlazor.Domains;
 public class BankAccount : IBankAccount
 {
     public Guid id { get; private set; } = Guid.NewGuid();
@@ -16,9 +14,8 @@ public class BankAccount : IBankAccount
     public AccountType AccountType { get; }
 
     public Currency Currency { get; }
-
+    public decimal Rate { get; } = 1.01m;
     public decimal Balance { get; private set; }
-
     public DateTime LastUpdated { get; private set; }
     public List<Transaction> Transaction { get; set; } = new();
 
@@ -53,6 +50,12 @@ public class BankAccount : IBankAccount
     public void Withdraw(decimal amount)
     {
         throw new NotImplementedException();
+    }
+
+    //applies interest rate to current balance when called.
+    public void ApplyInterestRate()
+    {
+        Balance *= Rate;
     }
 
     //Specifies giver and recipient of a user determined amount.

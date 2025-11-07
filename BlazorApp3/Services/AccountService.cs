@@ -1,8 +1,9 @@
-using AspireApp1.Web.Components.Interface;
-using BlazorApp3.Domains;
+using BankAppBlazor.Interfaces;
+using BankAppBlazor.Domains;
 using System.Threading.Tasks;
 using System.Xml;
-namespace BankApp.Services;
+using System.ComponentModel;
+namespace BankAppBlazor.Services;
 public class AccountService : IAccountService
 {
     private bool isLoaded = false; //bool automatically set to false, expected to be true after data retrieval.
@@ -21,6 +22,13 @@ public class AccountService : IAccountService
         if (_localStorage == null)
             throw new InvalidOperationException("Service Uninitiazed");
         return _localStorage.AddItem("accounts", _accounts.OfType<BankAccount>().ToList());
+    }
+
+    private Task DeleteAccount()
+    {
+        if (_localStorage == null)
+            throw new InvalidOperationException("Service Uninitialized");
+        return _localStorage.RemoveItem("accounts", _accounts.OfType<BankAccount>().ToList());
     }
 
     /// <summary>
@@ -61,5 +69,19 @@ public class AccountService : IAccountService
             ?? throw new KeyNotFoundException($"Account with ID {Receiver} not found");
         fromAccount.TransferTo(toAccount, amount);
         await SaveAccount();
+    }
+
+    public event Action? ApplyRate;
+
+    private void Notify() => ApplyRate?.Invoke();
+
+    public void AppliedRate(BankAccount bankAccount)
+    {
+        var lastUpdatedThreshold = bankAccount.LastUpdated.AddDays(1);
+        if (lastUpdatedThreshold <= DateTime.Now)
+        {
+            Notify();
+            bankAccount.ApplyInterestRate();
+        }  
     }
 }

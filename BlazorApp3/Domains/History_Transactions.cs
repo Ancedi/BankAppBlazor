@@ -1,4 +1,4 @@
-﻿namespace BlazorApp3.Domains
+﻿namespace BankAppBlazor.Domains
 {
     public class Transaction
     {
@@ -9,7 +9,7 @@
         public decimal BalanceAfter { get; set; } //Property to show updated balance.
         public Guid? Receiver { get; set; } //FromAccountID
         public Guid? Sender { get; set; } //ToAccountID
-        public decimal? _inputAmountFilter { get; set; } //Added variable for filter implemented in TransactionHistory.
+        public decimal _inputAmountFilter { get; set; } //Added variable for filter implemented in TransactionHistory.
     }
     public enum TransactionType
     {

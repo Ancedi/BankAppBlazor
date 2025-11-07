@@ -1,5 +1,5 @@
 ﻿@page "/transactionHistory"
-@using BlazorApp3.Domains
+@using BankAppBlazor.Domains
 @inject IAccountService AccountService
 @inject BlazorApp3.Services.LoginCheck Login
 <h3>TransactionHistory</h3>
@@ -35,7 +35,7 @@ else
 		//Display filter for amount transfered between accounts.
 		<div class ="mb-2">
 			<label>Filter By Amount</label>
-			<InputNumber @bind-Value="_inputAmountFilter" TValue="decimal?"/>
+			<InputNumber @bind-Value="_inputAmountFilter" TValue="decimal"/>
 		</div>
 
 		<!--Buttons with which to select how to sort/order the user history of transactions.-->
@@ -98,9 +98,9 @@ else
 	private Guid _selectAccountId;
 
 	//Variable to store filter input.
-	private decimal? _inputAmountFilter;
+	private decimal _inputAmountFilter;
 
-	//sets up the options for sorting (time or quantity).
+	//sets up constants for sorting (time, quantity).
 	private enum SortKey
 	{
 		Date,
@@ -150,7 +150,13 @@ else
 		{
 			_selectAccountId = _accounts[0].id;
 			_selectAccount = _accounts[0];
+			AccountService.ApplyRate += StateChanged;
 		}
+	}
+
+	public async void StateChanged()
+	{
+		await InvokeAsync(StateHasChanged);
 	}
 
 	/// <summary>
@@ -180,7 +186,7 @@ else
 		//If-sats which prevents transaction history from displaying items with a transfered amount above or below a user determined threshold, if given input.
 		if(_inputAmountFilter is > 0m)
 		{
-			var threshold = _inputAmountFilter!.Value;
+			var threshold = _inputAmountFilter!;
 			sortedList = sortedList.Where(t => (t?.Amount ?? 0m) >= threshold);
 		}
 		return sortedList.ToList();

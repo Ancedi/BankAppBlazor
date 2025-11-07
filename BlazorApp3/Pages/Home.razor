@@ -1,9 +1,9 @@
 ﻿@page "/"
-@inject BlazorApp3.Services.LoginCheck Login
+@inject BlazorApp3.Services.LoginCheck loginCheck
 <h3>Home</h3>
 
 <!--Bool checks whether user is logged in before presenting frontend editform to enter username and password-->
-@if (!Login.isLoggedIn)
+@if (!loginCheck.isLoggedIn)
 {
 	<EditForm Model="_model" OnValidSubmit="HandleLogin">
 		<DataAnnotationsValidator/>
@@ -22,49 +22,55 @@
 	<!--Warns user of giving invalid input-->
 	@if (string.IsNullOrEmpty(LoginAlert))
 	{
-		<p>@LoginAlert</p>
+		<p style="Color:red">@LoginAlert</p>
 	}
+    @if (_model.InputUsername != _login.Username || _model.InputPassword != _login.Password)
+    {
+        <p style="Color:red">@LoginAlert</p>
+    }
 }
-
-<!--If user input correct information, will be informed and offered the logout option.-->
-else
+    <!--If user input correct information, will be informed and offered the logout option.-->
+@if (loginCheck.isLoggedIn == true)
 {
-	<h4>@LoginAlert</h4>
-	<button @onclick="Login.LogOut">Log Out</button> <!--Only One Login Available, Preset.-->
+    <h4>@LoginAlert</h4>
+    <button @onclick="loginCheck.LogOut">Log Out</button> <!--Only One Login Available, Preset.-->
 }
 @code {
-	private Login _login = new Login();
+    private Login _login = new Login();
 
-	private readonly BankLogin _model = new();
-	private class BankLogin
-	{
-		public string? InputUsername { get; set; }
-		public string? InputPassword{ get; set; }
-		public void Clear()
-		{
-			InputUsername = string.Empty;
-			InputPassword = string.Empty;
-		}
-	}
+    private readonly BankLogin _model = new();
+    private class BankLogin
+    {
+        public string? InputUsername { get; set; }
+        public string? InputPassword{ get; set; }
+        public void Clear()
+        {
+            InputUsername = string.Empty;
+            InputPassword = string.Empty;
+        }
+    }
 
-	//string message for failed or successful login attempt.
-	private string LoginAlert = "";
+    //string message for failed or successful login attempt.
+    private string LoginAlert = "";
 
-	/// <summary>
-	/// void method with 2 different responses prepared for user's login attempt failing or succeeding.'
-	/// </summary>
-	private void HandleLogin()
-	{
-		if (_model.InputUsername == _login.Username && _model.InputPassword == _login.Password)
-		{
-			Login.LogIn();
-			LoginAlert = $"Welcome {_login.Username}";
-		}
-		else
-		{
-			Login.LogOut();
-			LoginAlert = "Invalid Username or Password. Please Try Again.";
-			_model.Clear(); //Claers input for another attmempt. Not set after else because of concern for wiping username/password data for current instance.
-		}
-	}
+    /// <summary>
+    /// void method with 2 different responses prepared for user's login attempt failing or succeeding.'
+    /// </summary>
+    private void HandleLogin()
+    {
+        if (_model.InputUsername == _login.Username && _model.InputPassword == _login.Password)
+        {
+            loginCheck.LogIn();
+            LoginAlert = $"Welcome {_login.Username}";
+        }
+        else
+        {
+            LoginAlert = "Invalid Username or Password. Please Try Again.";
+            _model.Clear(); //Clears input for another attmempt. Not set after else because of concern for wiping username/password data.
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        await loginCheck.LoadLoginState();
+    }
 }

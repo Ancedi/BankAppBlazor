@@ -1,6 +1,6 @@
-using BlazorApp3.Domains;
+using BankAppBlazor.Domains;
 
-namespace BankApp.Interfaces;
+namespace BankAppBlazor.Interfaces;
     /// <summary>
     /// Contains Bank App Account methods.
     /// </summary>
@@ -12,6 +12,7 @@ public interface IBankAccount
     string Name { get; }
     AccountType AccountType { get; }
     Currency Currency { get; }
+    decimal Rate { get; }
     decimal Balance { get; }
     DateTime LastUpdated { get; }
     List<Transaction> Transaction { get; }

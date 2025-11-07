@@ -1,4 +1,4 @@
-﻿namespace BlazorApp3.Domains
+﻿namespace BankAppBlazor.Domains
 {
     //Sets up different types of currency.
     public enum Currency

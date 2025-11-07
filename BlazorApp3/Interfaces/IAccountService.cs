@@ -1,4 +1,5 @@
-namespace BankApp.Interfaces;
+using BankAppBlazor.Domains;
+namespace BankAppBlazor.Interfaces;
 
 //Interface
 public interface IAccountService
@@ -7,5 +8,6 @@ public interface IAccountService
     List<BankAccount> GetAccount();
     Task EnsureLoaded();
     Task Transfer(Guid Sender, Guid Receiver, decimal amount);
-
+    event Action? ApplyRate;
+    void AppliedRate(BankAccount bankAccount);
 }

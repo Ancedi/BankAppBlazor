@@ -1,9 +1,9 @@
-﻿using AspireApp1.Web.Components.Interface;
+﻿using BankAppBlazor.Interfaces;
 using Microsoft.JSInterop;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace BankApp.Services
+namespace BankAppBlazor.Services
 {
     public class LocalStorage : IStorageService
     {
@@ -56,8 +56,7 @@ namespace BankApp.Services
             {
                 Console.WriteLine(exception);
                 return default;
-            }
-            
+            }   
         }
     }
 }

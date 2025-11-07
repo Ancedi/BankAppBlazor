@@ -1,4 +1,4 @@
-﻿namespace BlazorApp3.Domains
+﻿namespace BankAppBlazor.Domains
 {
     public class Login : ILogin
     {

@@ -1,5 +1,3 @@
-using AspireApp1.Web.Components.Interface;
-using BlazorApp3.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -16,8 +14,7 @@ namespace BlazorApp3
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddScoped<IStorageService, LocalStorage>();
             builder.Services.AddScoped<IAccountService, AccountService>();
-            builder.Services.AddScoped<LoginCheck>();
-
+            builder.Services.AddScoped<BlazorApp3.Services.LoginCheck>();
             await builder.Build().RunAsync();
         }
     }

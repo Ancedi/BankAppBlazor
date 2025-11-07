@@ -1,5 +1,5 @@
 ﻿@page "/createAccount"
-@using AspireApp1.Web.Components.Interface
+@using BankAppBlazor.Interfaces
 @inject IAccountService AccountService
 @inject BlazorApp3.Services.LoginCheck Login
 <PageTitle>Account Registration</PageTitle>
@@ -70,7 +70,7 @@ else
 			@foreach (var account in AccountList)
 			{
 				<li>
-					<strong>@account.Name</strong> @account.AccountType - @account.Balance (@account.Currency)
+					<strong>@account.Name</strong> @account.AccountType - @account.Balance (@account.Currency) - @account.Rate
 					<small>(Uppdaterad @account.LastUpdated.ToLocalTime())</small>
 				</li>
 			}
@@ -79,14 +79,21 @@ else
 }
 @code {
 	private List<BankAccount> AccountList = new();
-
 	private readonly CreateAccountModel _model = new();
+
+	/// <summary>
+	/// constructor to retrieve and assign value to the given properties.
+	/// </summary>
 	private class CreateAccountModel
 	{
 		public string? Name { get; set; }
 		public AccountType AccountType { get; set; }
 		public Currency Currency{ get; set; }
 		public decimal balance { get; set; }
+
+		/// <summary>
+		/// method to remove assigned values to repeat the process with Task CreateAccountAsync.
+		/// </summary>
 		public void clear()
 		{
 			Name = string.Empty;
@@ -97,7 +104,7 @@ else
 	}
 
 	/// <summary>
-	/// async method to create an account.
+	/// async method to create an account. Suppressed nullable warning for _model.Name.
 	/// </summary>
 	private async Task CreateAccountAsync()
 	{
@@ -105,7 +112,7 @@ else
 		{
 			Console.WriteLine(_model.Name);
 			await AccountService.CreateAccount(
-				_model.Name,
+				_model.Name!,
 				_model.Currency,
 				_model.AccountType,
 				_model.balance);
@@ -115,7 +122,7 @@ else
 			//empties input sections for aforementioned variables upon completion.
 			_model.clear();
 		}
-		catch (Exception exception)
+		catch (Exception exception) //Handles errors occuring when running the program.
 		{
 			Console.WriteLine($"{exception}, please try again.");
 		}
@@ -129,5 +136,13 @@ else
 	{
 		await AccountService.EnsureLoaded();
 		AccountList = AccountService.GetAccount();
+		AccountService.ApplyRate += StateChanged;
 	}
+
+	public async void StateChanged()
+	{
+		await InvokeAsync(StateHasChanged);
+	}
+
+
 }
