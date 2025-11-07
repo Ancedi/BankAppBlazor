@@ -63,6 +63,7 @@ else
 			<li>
 				<strong>@account.Name</strong> @account.AccountType - @account.Balance (@account.Currency)
 				<small>(Uppdaterad @account.LastUpdated.ToLocalTime())</small>
+				<button class="btn btn-danger" @onclick=""
 			</li>
 		}
 	</ul>
@@ -108,6 +109,18 @@ else
 		catch (Exception exception)
 		{
 			Console.WriteLine($"{exception}, please try again.");
+		}
+	}
+
+	private async Task EraseAccountAsync()
+	{
+		try
+		{
+			await AccountService.EraseAccount(_model.Name, _model.Currency, _model.AccountType, _model.balance);
+		}
+		catch (Exception exception)
+		{
+			Console.WriteLine(exception);
 		}
 	}
 
