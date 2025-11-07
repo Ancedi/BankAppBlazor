@@ -72,8 +72,8 @@ else
 				<li>
 					<strong>@account.Name</strong> @account.AccountType - @account.Balance (@account.Currency) - Interest Rate: +@account.Rate%
 					<small>(Uppdaterad @account.LastUpdated.ToLocalTime())</small>
-					<button class="btn btn-secondary" @onclick="() => AppliedRateAsync(account)">Check Interest</button>
-					<button class="btn btn-danger" @onclick="() => EraseAccountAsync(account)">Delete Account</button>
+					<button class="btn btn-secondary" @onclick="() => AppliedRateAsync(account)">Check Interest</button> <!--Manually updates to check for rise in interest.-->
+					<button class="btn btn-danger" @onclick="() => EraseAccountAsync(account)">Delete Account</button> <!--Delete an account button.-->
 				</li>
 			}
 		</ul>
@@ -150,7 +150,7 @@ else
 	{
 		await AccountService.EnsureLoaded();
 		AccountList = AccountService.GetAccount();
-		AccountService.ApplyRate += StateChanged;
+		AccountService.ApplyRate += StateChanged; //Calls method which says to update page.
 	}
 
 	public async void StateChanged()
@@ -158,6 +158,11 @@ else
 		await InvokeAsync(StateHasChanged);
 	}
 
+	/// <summary>
+	/// Task which calls a method in AccountService to update accounts' balance with interest.
+	/// </summary>
+	/// <param name="account"></param>
+	/// <returns></returns>
 	private Task AppliedRateAsync(BankAccount account)
 	{
 		try

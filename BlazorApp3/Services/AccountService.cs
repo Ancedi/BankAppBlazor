@@ -85,7 +85,7 @@ public class AccountService : IAccountService
 
     public void AppliedRate(BankAccount account)
     {
-        var lastUpdatedThreshold = account.LastUpdated.AddMinutes(1);
+        var lastUpdatedThreshold = account.LastUpdated.AddDays(1);
         if (lastUpdatedThreshold <= DateTime.Now)
         {
             Notify();
